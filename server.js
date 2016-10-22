@@ -32,3 +32,42 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 });
 
 // REPORT API ROUTES BELOW
+
+// Generic error handler for all endpoints
+function handleError(res, reason, message, code) {
+    console.log("ERROR: " + reason);
+    res.status(code || 500).json({"error": message});
+}
+
+/*  "/records
+ *      GET: finds all reports
+ *      POST: creates a new report
+ */
+
+app.get("/reports", function(req, res) {
+
+});
+
+
+app.post("/reports", function(req, res) {
+    
+});
+
+/*  "/records/:id
+ *      GET: find report by id
+ *      PUT: update report by id
+ *      DELETE: delete report by id
+ */
+
+app.get("/reports/:id", function(req, res) {
+
+});
+
+
+app.put("/reports/:id", function(req, res) {
+    
+});
+
+app.delete("/reports/:id", function(req, res) {
+    
+});
