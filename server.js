@@ -50,7 +50,21 @@ app.get("/reports", function(req, res) {
 
 
 app.post("/reports", function(req, res) {
-    
+    var newReport = req.body;
+    newReport.createDate = new Date();
+
+    // error if elements are missing from post request
+    if (!(req.body.company || req.body.assessor || req.body.totalScore)) {
+        handleError(res, "Invalid user input", "Must complete assessment.", 400);
+    }
+
+    db.collection(REPORTS_COLLECTION).insertOne(newReport, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to create new report.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
 });
 
 /*  "/records/:id
