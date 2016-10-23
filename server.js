@@ -45,7 +45,12 @@ function handleError(res, reason, message, code) {
  */
 
 app.get("/reports", function(req, res) {
-
+    db.collection(REPORTS_COLLECTION).find({}).toArray(function(err, docs) {
+        if (err) {
+            handleError(res, err.message, "Failed to get reports.");
+        } else {
+            res.status(200).json(docs);        
+    });
 });
 
 
