@@ -16,9 +16,9 @@
   <table class="table table-hover">
     <tbody>
       <tr ng-repeat="report in reports | orderBy:'lastName'" style="cursor:pointer">
-        <td>
-          <a ng-href="#/report/{{report._id}}">{{ report.company }} {{ report.totalScore }}</a>
-        </td>
+        <td>{{ report.company }}</td>
+        <td>{{ report.totalScore }}</td>
+        <td>{{ report.assessor }}</td>
       </tr>
     </tbody>
   </table>
