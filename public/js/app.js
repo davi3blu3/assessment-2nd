@@ -1,29 +1,29 @@
-angular.module("reportsApp", ['ngRoute'])
+angular.module("contactsApp", ['ngRoute'])
     .config(function($routeProvider) {
         $routeProvider
             .when("/", {
                 templateUrl: "list.html",
                 controller: "ListController",
                 resolve: {
-                    reports: function(reports) {
-                        return reports.getreports();
+                    reports: function(Reports) {
+                        return Reports.getReports();
                     }
                 }
             })
             .when("/new/report", {
-                controller: "NewreportController",
+                controller: "NewReportController",
                 templateUrl: "report-form.html"
             })
             .when("/report/:reportId", {
-                controller: "EditreportController",
+                controller: "EditReportController",
                 templateUrl: "report.html"
             })
             .otherwise({
                 redirectTo: "/"
             })
     })
-    .service("reports", function($http) {
-        this.getreports = function() {
+    .service("Reports", function($http) {
+        this.getReports = function() {
             return $http.get("/reports").
                 then(function(response) {
                     return response;
@@ -31,7 +31,7 @@ angular.module("reportsApp", ['ngRoute'])
                     alert("Error finding reports.");
                 });
         }
-        this.createreport = function(report) {
+        this.createReport = function(report) {
             return $http.post("/reports", report).
                 then(function(response) {
                     return response;
@@ -39,7 +39,7 @@ angular.module("reportsApp", ['ngRoute'])
                     alert("Error creating report.");
                 });
         }
-        this.getreport = function(reportId) {
+        this.getReport = function(reportId) {
             var url = "/reports/" + reportId;
             return $http.get(url).
                 then(function(response) {
@@ -48,7 +48,7 @@ angular.module("reportsApp", ['ngRoute'])
                     alert("Error finding this report.");
                 });
         }
-        this.editreport = function(report) {
+        this.editReport = function(report) {
             var url = "/reports/" + report._id;
             console.log(report._id);
             return $http.put(url, report).
@@ -59,7 +59,7 @@ angular.module("reportsApp", ['ngRoute'])
                     console.log(response);
                 });
         }
-        this.deletereport = function(reportId) {
+        this.deleteReport = function(reportId) {
             var url = "/reports/" + reportId;
             return $http.delete(url).
                 then(function(response) {
@@ -70,47 +70,47 @@ angular.module("reportsApp", ['ngRoute'])
                 });
         }
     })
-    .controller("ListController", function(reports, $scope) {
-        $scope.reports = reports.data;
+    .controller("ListController", function(contacts, $scope) {
+        $scope.contacts = contacts.data;
     })
-    .controller("NewreportController", function($scope, $location, reports) {
+    .controller("NewContactController", function($scope, $location, Contacts) {
         $scope.back = function() {
             $location.path("#/");
         }
 
-        $scope.savereport = function(report) {
-            reports.createreport(report).then(function(doc) {
-                var reportUrl = "/report/" + doc.data._id;
-                $location.path(reportUrl);
+        $scope.saveContact = function(contact) {
+            Contacts.createContact(contact).then(function(doc) {
+                var contactUrl = "/contact/" + doc.data._id;
+                $location.path(contactUrl);
             }, function(response) {
                 alert(response);
             });
         }
     })
-    .controller("EditreportController", function($scope, $routeParams, reports) {
-        reports.getreport($routeParams.reportId).then(function(doc) {
-            $scope.report = doc.data;
+    .controller("EditContactController", function($scope, $routeParams, Contacts) {
+        Contacts.getContact($routeParams.contactId).then(function(doc) {
+            $scope.contact = doc.data;
         }, function(response) {
             alert(response);
         });
 
         $scope.toggleEdit = function() {
             $scope.editMode = true;
-            $scope.reportFormUrl = "report-form.html";
+            $scope.contactFormUrl = "contact-form.html";
         }
 
         $scope.back = function() {
             $scope.editMode = false;
-            $scope.reportFormUrl = "";
+            $scope.contactFormUrl = "";
         }
 
-        $scope.savereport = function(report) {
-            reports.editreport(report);
+        $scope.saveContact = function(contact) {
+            Contacts.editContact(contact);
             $scope.editMode = false;
-            $scope.reportFormUrl = "";
+            $scope.contactFormUrl = "";
         }
 
-        $scope.deletereport = function(reportId) {
-            reports.deletereport(reportId);
+        $scope.deleteContact = function(contactId) {
+            Contacts.deleteContact(contactId);
         }
     });
