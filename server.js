@@ -49,7 +49,8 @@ app.get("/reports", function(req, res) {
         if (err) {
             handleError(res, err.message, "Failed to get reports.");
         } else {
-            res.status(200).json(docs);        
+            res.status(200).json(docs);
+        }
     });
 });
 
@@ -79,14 +80,35 @@ app.post("/reports", function(req, res) {
  */
 
 app.get("/reports/:id", function(req, res) {
-
+    db.collection(REPORTS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get report.");
+        } else {
+            res.status(200).json(doc);
+        }       
+    });
 });
 
 
 app.put("/reports/:id", function(req, res) {
-    
+    var updateDoc = req.body;
+    delete updateDoc._id;
+
+    db.collection(REPORTS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to update report.");
+        } else {
+            res.status(204).end;
+        }
+    });
 });
 
 app.delete("/reports/:id", function(req, res) {
-    
+    db.collection(REPORTS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+        if (err) {
+            handleError(res, err.message, "Failed to delete report.");
+        } else {
+            res.status(204).end();
+        }        
+    });
 });
