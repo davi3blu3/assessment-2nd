@@ -1,116 +1,116 @@
-angular.module("contactsApp", ['ngRoute'])
+angular.module("reportsApp", ['ngRoute'])
     .config(function($routeProvider) {
         $routeProvider
             .when("/", {
                 templateUrl: "list.html",
                 controller: "ListController",
                 resolve: {
-                    contacts: function(Contacts) {
-                        return Contacts.getContacts();
+                    reports: function(reports) {
+                        return reports.getreports();
                     }
                 }
             })
-            .when("/new/contact", {
-                controller: "NewContactController",
-                templateUrl: "contact-form.html"
+            .when("/new/report", {
+                controller: "NewreportController",
+                templateUrl: "report-form.html"
             })
-            .when("/contact/:contactId", {
-                controller: "EditContactController",
-                templateUrl: "contact.html"
+            .when("/report/:reportId", {
+                controller: "EditreportController",
+                templateUrl: "report.html"
             })
             .otherwise({
                 redirectTo: "/"
             })
     })
-    .service("Contacts", function($http) {
-        this.getContacts = function() {
-            return $http.get("/contacts").
+    .service("reports", function($http) {
+        this.getreports = function() {
+            return $http.get("/reports").
                 then(function(response) {
                     return response;
                 }, function(response) {
-                    alert("Error finding contacts.");
+                    alert("Error finding reports.");
                 });
         }
-        this.createContact = function(contact) {
-            return $http.post("/contacts", contact).
+        this.createreport = function(report) {
+            return $http.post("/reports", report).
                 then(function(response) {
                     return response;
                 }, function(response) {
-                    alert("Error creating contact.");
+                    alert("Error creating report.");
                 });
         }
-        this.getContact = function(contactId) {
-            var url = "/contacts/" + contactId;
+        this.getreport = function(reportId) {
+            var url = "/reports/" + reportId;
             return $http.get(url).
                 then(function(response) {
                     return response;
                 }, function(response) {
-                    alert("Error finding this contact.");
+                    alert("Error finding this report.");
                 });
         }
-        this.editContact = function(contact) {
-            var url = "/contacts/" + contact._id;
-            console.log(contact._id);
-            return $http.put(url, contact).
+        this.editreport = function(report) {
+            var url = "/reports/" + report._id;
+            console.log(report._id);
+            return $http.put(url, report).
                 then(function(response) {
                     return response;
                 }, function(response) {
-                    alert("Error editing this contact.");
+                    alert("Error editing this report.");
                     console.log(response);
                 });
         }
-        this.deleteContact = function(contactId) {
-            var url = "/contacts/" + contactId;
+        this.deletereport = function(reportId) {
+            var url = "/reports/" + reportId;
             return $http.delete(url).
                 then(function(response) {
                     return response;
                 }, function(response) {
-                    alert("Error deleting this contact.");
+                    alert("Error deleting this report.");
                     console.log(response);
                 });
         }
     })
-    .controller("ListController", function(contacts, $scope) {
-        $scope.contacts = contacts.data;
+    .controller("ListController", function(reports, $scope) {
+        $scope.reports = reports.data;
     })
-    .controller("NewContactController", function($scope, $location, Contacts) {
+    .controller("NewreportController", function($scope, $location, reports) {
         $scope.back = function() {
             $location.path("#/");
         }
 
-        $scope.saveContact = function(contact) {
-            Contacts.createContact(contact).then(function(doc) {
-                var contactUrl = "/contact/" + doc.data._id;
-                $location.path(contactUrl);
+        $scope.savereport = function(report) {
+            reports.createreport(report).then(function(doc) {
+                var reportUrl = "/report/" + doc.data._id;
+                $location.path(reportUrl);
             }, function(response) {
                 alert(response);
             });
         }
     })
-    .controller("EditContactController", function($scope, $routeParams, Contacts) {
-        Contacts.getContact($routeParams.contactId).then(function(doc) {
-            $scope.contact = doc.data;
+    .controller("EditreportController", function($scope, $routeParams, reports) {
+        reports.getreport($routeParams.reportId).then(function(doc) {
+            $scope.report = doc.data;
         }, function(response) {
             alert(response);
         });
 
         $scope.toggleEdit = function() {
             $scope.editMode = true;
-            $scope.contactFormUrl = "contact-form.html";
+            $scope.reportFormUrl = "report-form.html";
         }
 
         $scope.back = function() {
             $scope.editMode = false;
-            $scope.contactFormUrl = "";
+            $scope.reportFormUrl = "";
         }
 
-        $scope.saveContact = function(contact) {
-            Contacts.editContact(contact);
+        $scope.savereport = function(report) {
+            reports.editreport(report);
             $scope.editMode = false;
-            $scope.contactFormUrl = "";
+            $scope.reportFormUrl = "";
         }
 
-        $scope.deleteContact = function(contactId) {
-            Contacts.deleteContact(contactId);
+        $scope.deletereport = function(reportId) {
+            reports.deletereport(reportId);
         }
     });
